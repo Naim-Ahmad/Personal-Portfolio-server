@@ -1,10 +1,16 @@
 const dotenv = require('dotenv')
 dotenv.config()
 const express = require('express')
+const cors = require('cors')
 const {connectToMongoDB, client} = require('./config/db.config.js')
+const { corsOptions } = require('./config/middleware.config.js')
+const { ObjectId } = require('mongodb')
 
 const app = express()
 const port = process.env.PORT || 5000
+
+// middlewares
+app.use([cors(corsOptions), express.json()])
 
 // mongodb connection
 connectToMongoDB().catch(console.dir);
@@ -25,7 +31,7 @@ app.get('/projects', async(req, res)=>{
     res.send(result)
 })
 
-app.post('/insertProject', async(req, res)=>{
+app.post('/projects', async(req, res)=>{
     const result = await projectsCollection.insertOne(req.body)
     res.send(result)
 })
@@ -47,6 +53,24 @@ app.get('/testimonials', async(req, res)=>{
     const result = await testimonialsCollection.find().toArray()
     res.send(result)
 })
+
+app.post('/testimonials', async(req, res)=>{
+    const result = await testimonialsCollection.insertOne(req.body)
+    res.send(result)
+})
+
+app.put('/testimonials', async(req, res)=>{
+    const result = await testimonialsCollection.insertOne(req.body)
+    res.send(result)
+})
+
+app.delete('/testimonials/:id', async(req, res)=>{
+    const query = {_id: new ObjectId(req.params.id)}
+    const result = await testimonialsCollection.deleteOne(query)
+    res.send(result)
+})
+
+
 
 app.listen(port, ()=> {
     console.log(`Server is running on ${port} port...`);
